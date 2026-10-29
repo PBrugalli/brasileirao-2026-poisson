@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brasileirão 2026 • Simulador & Probabilidades Poisson</title>
+  <meta name="description" content="Classificação oficial atualizada do Campeonato Brasileiro 2026 via API da ESPN com cálculo probabilístico de rebaixamento pelo modelo de Poisson e simulador interativo de confrontos restantes.">
+  
+  <!-- Favicon / SVG Icon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚽</text></svg>">
+  
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- CSS Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- SITE HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-icon">⚽</div>
+        <div>
+          <h1 class="brand-title">
+            Brasileirão 2026
+            <span class="brand-tag">API ESPN</span>
+          </h1>
+          <p class="brand-subtitle">Modelo Estatístico de Poisson • Probabilidades de Rebaixamento & Simulador</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="sync-status" id="espn-sync-status">Conectado à ESPN API</div>
+        <button class="btn btn-secondary" id="btn-sync-espn" title="Consultar dados em tempo real da ESPN">
+          <span class="spin-icon">🔄</span> Sincronizar ESPN
+        </button>
+        <button class="btn btn-primary" id="btn-sim-all" title="Simular todos os 56 confrontos restantes usando as distribuições de Poisson">
+          ⚡ Simular Todos com Poisson
+        </button>
+        <button class="btn btn-danger-outline" id="btn-reset-sims" style="display: none;" title="Voltar para a tabela original oficial">
+          ✕ Resetar Simulações
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO METRICS -->
+    <section class="hero-stats-banner">
+      <div class="metrics-grid">
+        <div class="metric-card alert-border">
+          <span class="metric-label">🚨 Clubes com Risco de Queda</span>
+          <div class="metric-value" id="metric-risk-count">Calculando...</div>
+          <div class="metric-sub">Apenas probabilidades &gt; 0% são exibidas</div>
+        </div>
+
+        <div class="metric-card gold-border">
+          <span class="metric-label">⚠️ Maior Risco de Rebaixamento</span>
+          <div class="metric-value" id="metric-highest-risk">Calculando...</div>
+          <div class="metric-sub">Projeção por 8.000 iterações Monte Carlo</div>
+        </div>
+
+        <div class="metric-card">
+          <span class="metric-label">🎮 Jogos Simulados pelo Usuário</span>
+          <div class="metric-value" id="metric-sim-count">0 / 56</div>
+          <div class="metric-sub">Recálculo automático a cada resultado</div>
+        </div>
+
+        <div class="metric-card">
+          <span class="metric-label">📐 Média da Liga (Gols/Jogo)</span>
+          <div class="metric-value">2.73 gols</div>
+          <div class="metric-sub">Base para os parâmetros &lambda; de Poisson</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="tabs-nav" aria-label="Navegação de abas">
+      <button class="nav-tab active" data-tab="relegation">
+        <span>🚨</span> Termômetro do Rebaixamento (Poisson)
+      </button>
+      <button class="nav-tab" data-tab="standings">
+        <span>📊</span> Classificação Geral Completa
+      </button>
+      <button class="nav-tab" data-tab="simulator">
+        <span>⚽</span> Simulador de Jogos Restantes
+      </button>
+      <button class="nav-tab" data-tab="methodology">
+        <span>📐</span> Metodologia & Matemática
+      </button>
+    </nav>
+
+    <!-- TAB 1: RELEGATION RISK -->
+    <section class="tab-content active" id="tab-relegation">
+      <div id="relegation-cards-container">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- TAB 2: STANDINGS TABLE -->
+    <section class="tab-content" id="tab-standings">
+      <div class="table-card">
+        <div class="table-legend">
+          <div class="legend-item"><span class="legend-dot dot-lib"></span> 1º - 4º: Libertadores (Fase de Grupos)</div>
+          <div class="legend-item"><span class="legend-dot dot-prelib"></span> 5º - 6º: Pré-Libertadores</div>
+          <div class="legend-item"><span class="legend-dot dot-sula"></span> 7º - 12º: Copa Sul-Americana</div>
+          <div class="legend-item"><span class="legend-dot dot-z4"></span> 17º - 20º: Rebaixamento (Série B)</div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="standings-table">
+            <thead>
+              <tr>
+                <th style="width: 70px;">Pos</th>
+                <th>Clube</th>
+                <th style="text-align: center; width: 55px;">Pts</th>
+                <th style="text-align: center; width: 45px;">J</th>
+                <th style="text-align: center; width: 45px;">V</th>
+                <th style="text-align: center; width: 45px;">E</th>
+                <th style="text-align: center; width: 45px;">D</th>
+                <th style="text-align: center; width: 45px;" class="hide-mobile">GP</th>
+                <th style="text-align: center; width: 45px;" class="hide-mobile">GC</th>
+                <th style="text-align: center; width: 50px;">SG</th>
+                <th style="text-align: center; width: 55px;" class="hide-mobile">%</th>
+                <th style="text-align: center; width: 100px;">Risco Z-4</th>
+              </tr>
+            </thead>
+            <tbody id="standings-tbody">
+              <!-- Rendered dynamically by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: MATCH SIMULATOR -->
+    <section class="tab-content" id="tab-simulator">
+      <div class="simulator-toolbar">
+        <div class="filter-group">
+          <span class="filter-label">Filtrar Confrontos:</span>
+          <select id="round-filter-select" class="custom-select" aria-label="Filtrar confrontos por rodada ou clube">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <div class="toolbar-tips">
+          <span style="font-size: 0.8rem; color: var(--text-muted);">
+            💡 <em>Dica:</em> Clique nos botões rápidos de resultado ou digite o placar exato para atualizar a tabela e as probabilidades na hora!
+          </span>
+        </div>
+      </div>
+
+      <div id="matches-grid">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- TAB 4: METHODOLOGY -->
+    <section class="tab-content" id="tab-methodology">
+      <div class="methodology-content">
+        <div class="info-card">
+          <h3>📐 Como Funciona o Modelo Poisson no Futebol?</h3>
+          <p>
+            No futebol, a quantidade de gols marcados por uma equipe em uma partida de 90 minutos é um evento discreto e independente no tempo, modelado classicamente pela <strong>Distribuição de Poisson</strong>.
+          </p>
+          <div class="math-formula-box">
+            P(X = k) = (&lambda;<sup>k</sup> &times; e<sup>-&lambda;</sup>) / k!
+          </div>
+          <p>
+            Onde <strong>&lambda; (lambda)</strong> representa a taxa esperada de gols (Expected Goals / xG) da equipe naquela partida específica.
+          </p>
+        </div>
+
+        <div class="info-card">
+          <h3>⚙️ Cálculo das Taxas Esperadas (&lambda;<sub>mandante</sub> e &lambda;<sub>visitante</sub>)</h3>
+          <ol class="method-steps-list">
+            <li>
+              <strong>Força Ofensiva (&alpha;<sub>i</sub>):</strong> A razão entre a média de gols marcados pelo clube e a média de gols de todos os times do campeonato.
+            </li>
+            <li>
+              <strong>Fragilidade Defensiva (&beta;<sub>j</sub>):</strong> A razão entre a média de gols sofridos pelo adversário e a média de gols sofridos na liga.
+            </li>
+            <li>
+              <strong>Fator Mando de Campo:</strong> Historicamente no Brasileirão, mandantes marcam cerca de 15% a mais de gols que a média geral, enquanto visitantes marcam 15% a menos.
+            </li>
+            <li>
+              <strong>Gols Esperados (&lambda;):</strong>
+              <div class="math-formula-box" style="margin: 0.5rem 0;">
+                &lambda;<sub>Casa</sub> = &alpha;<sub>Casa</sub> &times; &beta;<sub>Fora</sub> &times; MédiaGols<sub>Casa</sub><br>
+                &lambda;<sub>Fora</sub> = &alpha;<sub>Fora</sub> &times; &beta;<sub>Casa</sub> &times; MédiaGols<sub>Fora</sub>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="info-card">
+          <h3>🎲 Simulação de Monte Carlo para o Rebaixamento</h3>
+          <p>
+            Para determinar a chance de queda de cada equipe para a Série B:
+          </p>
+          <ul class="method-steps-list">
+            <li>Realizamos <strong>8.000 simulações completas</strong> de todas as 56 partidas restantes do campeonato.</li>
+            <li>Para cada confronto não simulado pelo usuário, sorteamos placares estocásticos segundo as distribuições de Poisson calibradas.</li>
+            <li>Ao final de cada simulação, a tabela é ordenada rigorosamente segundo os critérios de desempate da CBF (Pontos &gt; Vitórias &gt; Saldo de Gols &gt; Gols Pró).</li>
+            <li>Os 4 últimos colocados (17º, 18º, 19º e 20º) recebem a contagem de rebaixamento.</li>
+            <li><strong>Filtro Matemático Estrito:</strong> Apenas clubes com risco real superior a 0% são exibidos na lista de perigo. Clubes matematicamente salvos não poluem o visual.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- SITE FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <p class="footer-text">
+        Dados oficiais fornecidos em tempo real pela <strong>ESPN API</strong> • Campeonato Brasileiro Série A 2026
+      </p>
+      <p class="footer-sub">
+        Desenvolvido com Modelo Poisson Bivariado e Simulação Monte Carlo • Atualizado dinamicamente
+      </p>
+    </div>
+  </footer>
+
+  <!-- DATA & SCRIPTS -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+================================================================================
+  GUIA PASSO A PASSO: COMO SUBIR PARA O GITHUB E PUBLICAR SEU SITE GRATUITAMENTE
+  Projeto: Brasileirão 2026 • Simulador & Modelo Poisson (API ESPN)
+================================================================================
+
+Parabéns! O seu site está 100% pronto, leve, responsivo e não precisa de nenhum
+servidor backend complexo para rodar. Você pode abri-lo agora mesmo dando dois
+cliques no arquivo "index.html" no seu computador.
+
+Abaixo estão as instruções detalhadas para você subir este projeto para o seu
+GitHub e gerar uma URL pública e gratuita (ex: https://seu-usuario.github.io/brasileirao-2026-poisson/)
+para compartilhar com seus amigos no WhatsApp, Twitter, etc.
+
+--------------------------------------------------------------------------------
+MÉTODO 1: PUBLICAR VIA GITHUB PAGES (O MAIS POPULAR E RECOMENDADO)
+--------------------------------------------------------------------------------
+
+PASSO 1: CRIAR O REPOSITÓRIO NO GITHUB
+1. Acesse o site do GitHub (https://github.com/) e faça login na sua conta.
+2. No canto superior direito, clique no botão "+" e selecione "New repository".
+3. Preencha as informações:
+   - Repository name: brasileirao-2026-poisson  (ou o nome que preferir)
+   - Description: Simulador do Brasileirão 2026 com modelo Poisson e dados da ESPN
+   - Escolha: "Public" (Público, para que as pessoas possam acessar seu site)
+   - IMPORTANTE: NÃO marque a opção "Add a README file" se você for subir via Git.
+4. Clique no botão verde "Create repository".
+
+---
+
+PASSO 2: ENVIAR OS ARQUIVOS (DUAS OPÇÕES)
+
+OPÇÃO A — DIRETO PELO TERMINAL / GIT (RECOMENDADO SE VOCÊ TEM GIT INSTALADO):
+Abra o PowerShell ou Terminal na pasta onde estão os arquivos deste projeto:
+C:\Users\pbrug\.gemini\antigravity\scratch\brasileirao-2026-poisson
+
+E digite os seguintes comandos (substituindo SEU-USUARIO pelo seu usuário do GitHub):
+
+   git init
+   git add .
+   git commit -m "Publicação inicial do simulador Brasileirao 2026"
+   git branch -M main
+   git remote add origin https://github.com/SEU-USUARIO/brasileirao-2026-poisson.git
+   git push -u origin main
+
+OPÇÃO B — PELO PRÓPRIO NAVEGADOR (SEM PRECISAR DE TERMINAL):
+1. Na página do repositório recém-criado no GitHub, clique no link "uploading an existing file".
+2. Abra a pasta do projeto no seu computador:
+   C:\Users\pbrug\.gemini\antigravity\scratch\brasileirao-2026-poisson
+3. Arraste e solte todos os arquivos e pastas para a janela do GitHub:
+   - index.html
+   - styles.css
+   - app.js
+   - data.js
+   - data/ (pasta com os arquivos json)
+   - README.md
+4. Na parte inferior da página, clique no botão verde "Commit changes".
+
+---
+
+PASSO 3: ATIVAR O GITHUB PAGES PARA GERAR SUA URL PÚBLICA GRATUITA
+1. Na página do seu repositório no GitHub, clique na aba "Settings" (Configurações) no topo.
+2. No menu lateral esquerdo, clique na opção "Pages" (dentro da seção "Code and automation").
+3. Em "Build and deployment" > "Source", deixe selecionado "Deploy from a branch".
+4. Abaixo, em "Branch":
+   - Mude de "None" para "main"
+   - Deixe a pasta como "/ (root)"
+   - Clique no botão "Save".
+5. Aguarde cerca de 1 a 2 minutos. Atualize a página de Settings > Pages.
+6. Pronto! O GitHub vai mostrar uma mensagem em destaque com a sua URL pública:
+   👉 "Your site is live at https://SEU-USUARIO.github.io/brasileirao-2026-poisson/"
+7. Qualquer pessoa no mundo agora pode entrar pelo celular ou computador e simular o Brasileirão!
+
+--------------------------------------------------------------------------------
+MÉTODO 2: PUBLICAR NO VERCEL OU NETLIFY (ALTERNATIVA ULTRA RÁPIDA EM 30 SEGUNDOS)
+--------------------------------------------------------------------------------
+
+Se preferir uma URL personalizada com deploy instantâneo:
+
+VIA NETLIFY:
+1. Acesse https://app.netlify.com/drop
+2. Arraste a pasta inteira "brasileirao-2026-poisson" para a área indicada na tela.
+3. Em 10 segundos ele gera um link público (ex: https://brasileirao-poisson.netlify.app).
+
+VIA VERCEL:
+1. Acesse https://vercel.com/ e faça login com seu GitHub.
+2. Clique em "Add New..." > "Project".
+3. Selecione o repositório "brasileirao-2026-poisson" e clique em "Deploy".
+4. Pronto! Sua URL pública com certificado SSL (HTTPS) estará ativa imediatamente.
+
+--------------------------------------------------------------------------------
+COMO TESTAR OFFLINE NO SEU COMPUTADOR AGORA MESMO
+--------------------------------------------------------------------------------
+1. Abra o Explorador de Arquivos do Windows.
+2. Vá até a pasta:
+   C:\Users\pbrug\.gemini\antigravity\scratch\brasileirao-2026-poisson
+3. Dê dois cliques no arquivo "index.html".
+4. O simulador abrirá imediatamente no seu navegador padrão (Chrome, Edge, etc.)
+   com todos os escudos, simulações interativas e cálculos de Poisson funcionando!
+
+Divirta-se acompanhando e simulando o Brasileirão 2026!
+================================================================================
